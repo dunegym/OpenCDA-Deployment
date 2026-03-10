@@ -12,6 +12,10 @@ from opencda.scenario_testing.utils.yaml_utils import add_current_time
 
 
 def run_scenario(opt, scenario_params):
+    eval_manager = None
+    scenario_manager = None
+    single_cav_list = []
+    bg_veh_list = []
     try:
         scenario_params = add_current_time(scenario_params)
 
@@ -61,12 +65,14 @@ def run_scenario(opt, scenario_params):
                 single_cav.vehicle.apply_control(control)
 
     finally:
-        eval_manager.evaluate()
+        if eval_manager:
+            eval_manager.evaluate()
 
-        if opt.record:
+        if scenario_manager and opt.record:
             scenario_manager.client.stop_recorder()
 
-        scenario_manager.close()
+        if scenario_manager:
+            scenario_manager.close()
 
         for v in single_cav_list:
             v.destroy()
