@@ -53,3 +53,29 @@ python opencda.py -t platoon_joining_2lanefree_carla -v 0.9.12
 ```
 
 In this scenario, a platoon will drive on the mainline together with a mixed traffic flow. A single CAV will come from the merging lane, communicate with the platoon to cooperatively merge into the mainline, and simultaneously join the platoon.
+
+##### Setup yolo environment
+
+This section is only needed for the users who want to test perception algorithms. By default, OpenCDA does not require pytorch installed and it retrieves the object positions from the server directly. Once perception module is activated, then OpenCDA will use yolov5 with pytorch to run object detection. 
+
+```bash
+pip install -r requirements_yolov5.txt
+```
+
+It may warn you to install urllib3>=2.6.0 and Python>=3.9, but Carla 0.9.12 only supports python==3.7/3.8, so just ignore it. 
+
+##### Test yolo environment
+
+To test yolo environment, run: 
+
+```bash
+python opencda.py -t single_town06_carla  -v 0.9.12 --apply_ml
+```
+
+The apply_ml flag will import the pytorch library and load Yolov5 model (Thus Pytorch is required) for object detection. Thus, in this scenario, the perception, localization, planning and control modules will all be activated. 
+
+```bash
+python opencda.py -t platoon_joining_town06_carla  -v 0.9.12 --apply_ml
+```
+
+A single CAV will try to overtake several human-driven vehicles to join the platoon from the back. 
