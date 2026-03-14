@@ -294,14 +294,16 @@ def _get_sumo_net(cfg_file):
     cfg_file = os.path.join(os.getcwd(), cfg_file)
 
     tree = ET.parse(cfg_file)
-    tag = tree.find('//net-file')
+    # Use explicit descendant search to avoid lxml future behavior change.
+    tag = tree.find('.//net-file')
     if tag is None:
         return None
 
     net_file = os.path.join(os.path.dirname(cfg_file), tag.get('value'))
     logging.debug('Reading net file: %s', net_file)
 
-    sumo_net = traci.sumolib.net.readNet(net_file)
+    # sumolib is imported directly; traci has no `sumolib` attribute.
+    sumo_net = sumolib.net.readNet(net_file)
     return sumo_net
 
 class SumoSimulation(object):
@@ -316,14 +318,16 @@ class SumoSimulation(object):
 
         if host is None or port is None:
             logging.info('Starting new sumo server...')
-            if sumo_gui is True:
-                logging.info('Remember to press the play button to start the simulation')
-
-            traci.start([sumo_binary,
+            traci_args = [
+                sumo_binary,
                 '--configuration-file', cfg_file,
                 '--step-length', str(step_length),
                 '--collision.check-junctions'
-            ])
+            ]
+            if sumo_gui is True:
+                traci_args.append('--start')
+
+            traci.start(traci_args)
 
         else:
             logging.info('Connection to sumo server. Host: %s Port: %s', host, port)

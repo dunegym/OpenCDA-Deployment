@@ -34,6 +34,8 @@ class BridgeHelper(object):
 
     blueprint_library = []
     offset = (0, 0)
+    # Avoid logging the same unknown SUMO vtype warning on every spawn.
+    _UNKNOWN_SUMO_VTYPE_WARNED = set()
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
     data_json = os.path.join(dir_path, 'vtypes.json')
@@ -128,9 +130,15 @@ class BridgeHelper(object):
         else:
             blueprint = BridgeHelper._get_recommended_carla_blueprint(sumo_actor)
             if blueprint is not None:
-                logging.warning(
-                    'sumo vtype %s not found in carla. The following blueprint will be used: %s',
-                    type_id, blueprint.id)
+                if type_id not in BridgeHelper._UNKNOWN_SUMO_VTYPE_WARNED:
+                    logging.warning(
+                        'sumo vtype %s not found in carla. The following blueprint will be used: %s',
+                        type_id, blueprint.id)
+                    BridgeHelper._UNKNOWN_SUMO_VTYPE_WARNED.add(type_id)
+                else:
+                    logging.debug(
+                        'sumo vtype %s not found in carla. Using fallback blueprint: %s',
+                        type_id, blueprint.id)
             else:
                 logging.error('sumo vtype %s not supported. No vehicle will be spawned in carla',
                               type_id)

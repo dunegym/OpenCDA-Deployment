@@ -19,6 +19,11 @@ from opencda.scenario_testing.utils.yaml_utils import add_current_time
 
 
 def run_scenario(opt, scenario_params):
+    scenario_manager = None
+    eval_manager = None
+    platoon_list = []
+    single_cav_list = []
+
     try:
         scenario_params = add_current_time(scenario_params)
 
@@ -84,8 +89,11 @@ def run_scenario(opt, scenario_params):
                 single_cav.vehicle.apply_control(control)
 
     finally:
-        eval_manager.evaluate()
-        scenario_manager.close()
+        if eval_manager is not None:
+            eval_manager.evaluate()
+
+        if scenario_manager is not None:
+            scenario_manager.close()
 
         for platoon in platoon_list:
             platoon.destroy()
