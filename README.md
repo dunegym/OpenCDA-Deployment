@@ -99,7 +99,11 @@ python opencda.py -t platoon_joining_2lanefree_cosim -v 0.9.12
 Cooperative merge and joining a platoon under co-simulation. 
 
 ```bash
-python opencda.py -t single_town06_cosim  -v 0.9.11 --apply_ml
+python opencda.py -t single_town06_cosim  -v 0.9.12 --apply_ml
 ```
 
 This scenario applies Sumo to generate the traffic flow instead of using Carla traffic manager. Yolov5 and simple Lidar fusion are used to detect object 3D bounding box. 
+
+### Quick start
+
+[Command_Parameters.md](Command_Parameters.md)
