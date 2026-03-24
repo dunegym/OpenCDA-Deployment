@@ -79,3 +79,27 @@ python opencda.py -t platoon_joining_town06_carla  -v 0.9.12 --apply_ml
 ```
 
 A single CAV will try to overtake several human-driven vehicles to join the platoon from the back. 
+
+##### Setup SUMO environment
+
+SUMO is a trafic simulator often used with CARLA. Some of the functions in OpenCDA need SUMO. Look into https://sumo.dlr.de/docs/Downloads.php to download it for your platform. 
+
+Then we can use SUMO's python api:
+
+```bash
+pip install traci==1.26.0
+```
+
+##### Test SUMO environment
+
+```bash
+python opencda.py -t platoon_joining_2lanefree_cosim -v 0.9.12
+```
+
+Cooperative merge and joining a platoon under co-simulation. 
+
+```bash
+python opencda.py -t single_town06_cosim  -v 0.9.11 --apply_ml
+```
+
+This scenario applies Sumo to generate the traffic flow instead of using Carla traffic manager. Yolov5 and simple Lidar fusion are used to detect object 3D bounding box. 
